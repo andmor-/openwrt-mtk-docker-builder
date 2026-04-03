@@ -2,7 +2,7 @@
 
 Debian based Docker image for building the MediaTek OpenWrt SDK against OpenWrt 25.12, with full support for the Banana Pi R4, including the 8GB RAM variant.
 
-The image backports OpenWrt PR **#21437** (8GB DRAM support) into the OpenWrt 25.12 branch pre‑prepared with `autobuild.sh prepare`
+The image backports OpenWrt PR [#21437](https://github.com/openwrt/openwrt/pull/21437) (8GB DRAM support) into the OpenWrt 25.12 branch pre‑prepared with `autobuild.sh prepare`
 
 ---
 
