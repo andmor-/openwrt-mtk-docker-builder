@@ -1,0 +1,43 @@
+Patch sourced from:
+https://github.com/chenglong-do/bpi-r4-openwrt-25.12-mtk/blob/main/my_files/9999-image-bpi-r4-sdcard.patch
+And edited for building a proper sdcard full image 
+--- a/target/linux/mediatek/image/filogic.mk
++++ b/target/linux/mediatek/image/filogic.mk
+@@ -673,11 +673,35 @@
+   DEVICE_COMPAT_VERSION := 1.1
+   DEVICE_COMPAT_MESSAGE := The non-switch ports were renamed to match the board/case labels
+   KERNEL_LOADADDR := 0x46000000
++
++  ARTIFACTS := \
++	       emmc-gpt.bin emmc-preloader.bin emmc-bl31-uboot.fip \
++	       sdcard.img.gz \
++	       snand-preloader.bin snand-bl31-uboot.fip
++  ARTIFACT/emmc-gpt.bin		:= mt798x-gpt emmc
++  ARTIFACT/emmc-preloader.bin	:= mt7988-bl2 emmc-comb
++  ARTIFACT/emmc-bl31-uboot.fip	:= mt7988-bl31-uboot $$(DEVICE_NAME)-emmc
++  ARTIFACT/snand-preloader.bin	:= mt7988-bl2 spim-nand-ubi-comb
++  ARTIFACT/snand-bl31-uboot.fip	:= mt7988-bl31-uboot $$(DEVICE_NAME)-snand
++  ARTIFACT/sdcard.img.gz	:= mt798x-gpt sdmmc |\
++				   pad-to 17k | mt7988-bl2 sdmmc-comb |\
++				   pad-to 6656k | mt7988-bl31-uboot $$(DEVICE_NAME)-sdmmc |\
++				$(if $(CONFIG_TARGET_ROOTFS_INITRAMFS),\
++				   pad-to 12M | append-image-stage initramfs-recovery.itb | check-size 44m |\
++				) \
++				   pad-to 44M | mt7988-bl2 spim-nand-ubi-comb |\
++				   pad-to 45M | mt7988-bl31-uboot $$(DEVICE_NAME)-snand |\
++				   pad-to 51M | mt7988-bl2 emmc-comb |\
++				   pad-to 52M | mt7988-bl31-uboot $$(DEVICE_NAME)-emmc |\
++				   pad-to 56M | mt798x-gpt emmc |\
++				$(if $(CONFIG_TARGET_ROOTFS_SQUASHFS),\
++				   pad-to 64M | append-image squashfs-sysupgrade.itb | check-size |\
++				) \
++				  gzip
++
+   KERNEL := kernel-bin | gzip
+   KERNEL_INITRAMFS := kernel-bin | lzma | \
+ 	fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd | pad-to 64k
+-  IMAGES := sysupgrade.itb
+   KERNEL_INITRAMFS_SUFFIX := -recovery.itb
+-  KERNEL_IN_UBI := 1
+   IMAGES := sysupgrade.itb
+   IMAGE/sysupgrade.itb := append-kernel | fit gzip $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb external-with-rootfs | pad-rootfs | append-metadata

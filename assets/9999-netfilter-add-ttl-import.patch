@@ -1,0 +1,14 @@
+This patch fixes the build for commits on Mediatek SDK master branch after 043751db01afae421132bcf81eeed9745f6c54eb
+In 043751db01afae421132bcf81eeed9745f6c54eb the file 999-ppe-38-nft_flow_offload-add-ttl-learning-flow.patch is added
+but it seems to forget to add this line also to net/netfilter/nf_conntrack_netlink.c
+See: https://git01.mediatek.com/plugins/gitiles/openwrt/feeds/mtk-openwrt-feeds/+/043751db01afae421132bcf81eeed9745f6c54eb/25.12/files/target/linux/mediatek/patches-6.12/999-ppe-38-nft_flow_offload-add-ttl-learning-flow.patch
+--- a/net/netfilter/nf_conntrack_netlink.c
++++ b/net/netfilter/nf_conntrack_netlink.c
+@@ -32,6 +32,7 @@
+ #include <net/netfilter/nf_conntrack_zones.h>
+ #include <net/netfilter/nf_conntrack_timestamp.h>
+ #include <net/netfilter/nf_conntrack_labels.h>
++#include <net/netfilter/nf_conntrack_ttl.h>
+ #include <net/netfilter/nf_conntrack_synproxy.h>
+ #if IS_ENABLED(CONFIG_NF_NAT)
+ #include <net/netfilter/nf_nat.h>
