@@ -1,6 +1,6 @@
 FROM debian:13.4
 
-MAINTAINER andmor-
+LABEL org.opencontainers.image.authors="andmor-"
 
 RUN apt-get update && \
 	DEBIAN_FRONTEND=noninteractive apt-get -qq install -y --no-install-recommends \
