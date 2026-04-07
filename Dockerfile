@@ -46,11 +46,11 @@ USER build
 
 WORKDIR /home/build/
 
-# Last verified working: 00dcdd7451487dfb63c6c3bbd649a547c76e1a13 - firmware: Add support for Airoha EN7581/AN7583 NPU variant firmware
-ENV OPENWRT_VER=00dcdd7451487dfb63c6c3bbd649a547c76e1a13
+# Last verified working: 642e10e5f76279cd7dba49c73e3b1b40f5cc04d1 - qualcommax: ipq807x: label mac for Linksys MX5300
+ENV OPENWRT_VER=642e10e5f76279cd7dba49c73e3b1b40f5cc04d1
 ENV OPENWRT_BRANCH=openwrt-25.12
-# Last verified working: 6163862d36f43f1f3bde467cd263a3439e4cc74c - [INTERNAL][kernel-6.12][common][doc][Add patch description and history: PPE part]
-ENV MTK_FEEDS_VER=6163862d36f43f1f3bde467cd263a3439e4cc74c
+# Last verified working: e703a4ca118969d9d3f0ee2d10d61599c0db7148 - [openwrt-24][MAC80211][Change mac80211 configuration]
+ENV MTK_FEEDS_VER=e703a4ca118969d9d3f0ee2d10d61599c0db7148
 ENV MTK_FEEDS_BRANCH=master
 
 RUN git clone --branch ${OPENWRT_BRANCH} https://github.com/openwrt/openwrt.git openwrt && \
@@ -68,7 +68,8 @@ RUN cd openwrt && \
 # Backup patches and config to use after make clean in interatcive mode
 COPY assets/ ./assets
 
-COPY assets/feed_revision mtk-openwrt-feeds/autobuild/unified/
+# Uncomment to use last known working version of feeds
+#COPY assets/feed_revision mtk-openwrt-feeds/autobuild/unified/
 
 # Community patches
 COPY assets/999-sfp-10-additional-quirks.patch mtk-openwrt-feeds/25.12/files/target/linux/mediatek/patches-6.12/
@@ -78,7 +79,8 @@ COPY assets/100-wifi-mt76-mt7996-Use-tx_power-from-default-fw-if-EEP.patch mtk-o
 # My patch tree on mtk SDK
 COPY assets/9999-netfilter-add-ttl-import.patch mtk-openwrt-feeds/autobuild/unified/filogic/mac80211/25.12/files/target/linux/mediatek/patches-6.12/
 COPY assets/99999-enable_8g_images_on_prepared_mtk_pr21437.patch mtk-openwrt-feeds/25.12/patches-base/
-COPY assets/9999-remove-rust-llvm-dl.patch mtk-openwrt-feeds/25.12/patches-feeds/
+# Uncomment if assets/feed_revision was used above
+#COPY assets/9999-remove-rust-llvm-dl.patch mtk-openwrt-feeds/25.12/patches-feeds/
 
 WORKDIR /home/build/openwrt
 
@@ -93,8 +95,8 @@ RUN chown -R build:build \
 	../mtk-openwrt-feeds/25.12/patches-base/ \
 	../mtk-openwrt-feeds/25.12/patches-feeds/ \
 	../mtk-openwrt-feeds/autobuild/unified/filogic/mac80211/25.12/files/package/kernel/mt76/patches/ \
-	../mtk-openwrt-feeds/autobuild/unified/filogic/mac80211/25.12/files/target/linux/mediatek/patches-6.12/9999-netfilter-add-ttl-import.patch \
-	../mtk-openwrt-feeds/autobuild/unified/feed_revision
+	../mtk-openwrt-feeds/autobuild/unified/filogic/mac80211/25.12/files/target/linux/mediatek/patches-6.12/9999-netfilter-add-ttl-import.patch
+#	../mtk-openwrt-feeds/autobuild/unified/feed_revision
 
 USER build
 
