@@ -36,7 +36,7 @@ RUN apt-get update && \
 		golang && \
 	apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Docker exposes the total numbre of cores of the host in nproc -> set a reasonable nproc number for autobuild
+# Docker exposes the total number of cores of the host in nproc -> set a reasonable nproc number for autobuild
 RUN echo '#!/bin/sh' > /usr/local/bin/nproc && \
 	echo 'echo 5' >> /usr/local/bin/nproc && \
 	chmod +x /usr/local/bin/nproc
@@ -46,8 +46,8 @@ USER build
 
 WORKDIR /home/build/
 
-# Last verified working: 642e10e5f76279cd7dba49c73e3b1b40f5cc04d1 - qualcommax: ipq807x: label mac for Linksys MX5300
-ENV OPENWRT_VER=642e10e5f76279cd7dba49c73e3b1b40f5cc04d1
+# Last verified working: 865229fad90af85989bbcdd294424a6f2d2723b3 - mediatek: filogic: fix EAX17 rootfs hash in FIT node for per-device rootfs builds
+ENV OPENWRT_VER=865229fad90af85989bbcdd294424a6f2d2723b3
 ENV OPENWRT_BRANCH=openwrt-25.12
 # Last verified working: e703a4ca118969d9d3f0ee2d10d61599c0db7148 - [openwrt-24][MAC80211][Change mac80211 configuration]
 ENV MTK_FEEDS_VER=e703a4ca118969d9d3f0ee2d10d61599c0db7148
