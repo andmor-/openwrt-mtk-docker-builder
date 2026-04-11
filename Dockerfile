@@ -46,11 +46,11 @@ USER build
 
 WORKDIR /home/build/
 
-# Last verified working: 865229fad90af85989bbcdd294424a6f2d2723b3 - mediatek: filogic: fix EAX17 rootfs hash in FIT node for per-device rootfs builds
-ENV OPENWRT_VER=865229fad90af85989bbcdd294424a6f2d2723b3
+# Last verified working: 1f535037b19731cd37512ed00b648a35b40ad13c - qualcommax: ipq807x: mx5300: use existing aliases node
+ENV OPENWRT_VER=1f535037b19731cd37512ed00b648a35b40ad13c
 ENV OPENWRT_BRANCH=openwrt-25.12
-# Last verified working: e703a4ca118969d9d3f0ee2d10d61599c0db7148 - [openwrt-24][MAC80211][Change mac80211 configuration]
-ENV MTK_FEEDS_VER=e703a4ca118969d9d3f0ee2d10d61599c0db7148
+# Last verified working: 79b79ece6267ea64db5dab853d4576d9b9c11889 - [kernel][common][eth][Refactor the check condition from PSE_FC to GDM_RXFC in the QDMA Tx hang monitor]
+ENV MTK_FEEDS_VER=79b79ece6267ea64db5dab853d4576d9b9c11889
 ENV MTK_FEEDS_BRANCH=master
 
 RUN git clone --branch ${OPENWRT_BRANCH} https://github.com/openwrt/openwrt.git openwrt && \
