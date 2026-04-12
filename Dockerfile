@@ -66,7 +66,7 @@ RUN cd openwrt && \
 	./scripts/feeds install -a
 
 # Backup patches and config to use after make clean in interatcive mode
-COPY assets/ ./assets
+COPY --chown=build:build assets/ ./assets
 
 # Uncomment to use last known working version of feeds
 #COPY --chown=build:build  assets/feed_revision mtk-openwrt-feeds/autobuild/unified/
