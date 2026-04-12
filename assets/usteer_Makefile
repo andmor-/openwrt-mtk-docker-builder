@@ -1,0 +1,43 @@
+include $(TOPDIR)/rules.mk
+
+PKG_NAME:=usteer
+PKG_SOURCE_DATE:=2026-04-01
+PKG_SOURCE_VERSION:=7969def88f7fee748c5a6e1eea617a962495acb0
+PKG_RELEASE:=2
+
+PKG_VERSION:=$(subst -,.,$(PKG_SOURCE_DATE))~$(shell echo $(PKG_SOURCE_VERSION) | cut -c1-8)
+
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/NilsRo/usteer-ng.git
+PKG_MIRROR_HASH:=3993f72c51052a7147e9c51a7d88d4d8754b2de122c845669a630b3a4ae8730b
+
+# 2. FORCE the build directory name to be exactly what you need
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
+
+PKG_MAINTAINER:=David Bauer <mail@david-bauer.net>
+PKG_LICENSE:=GPL-2.0-only
+
+PKG_BUILD_DEPENDS:=libpcap
+
+include $(INCLUDE_DIR)/package.mk
+include $(INCLUDE_DIR)/cmake.mk
+
+define Package/usteer
+  SECTION:=net
+  CATEGORY:=Network
+  DEPENDS:=+libubox +libubus +libblobmsg-json +libnl-tiny
+  TITLE:=OpenWrt AP roaming assist daemon (usteer-ng fork)
+endef
+
+define Package/usteer/conffiles
+/etc/config/usteer
+endef
+
+define Package/usteer/install
+	$(INSTALL_DIR) $(1)/sbin $(1)/etc/init.d $(1)/etc/config
+	$(CP) $(PKG_BUILD_DIR)/openwrt/usteer-ng/files/etc/config/usteer $(1)/etc/config/usteer
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/openwrt/usteer-ng/files/etc/init.d/usteer $(1)/etc/init.d/usteer
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/usteerd $(1)/sbin/usteerd
+endef
+
+$(eval $(call BuildPackage,usteer))

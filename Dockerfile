@@ -74,6 +74,7 @@ COPY assets/ ./assets
 # Community patches
 COPY assets/999-sfp-10-additional-quirks.patch mtk-openwrt-feeds/25.12/files/target/linux/mediatek/patches-6.12/
 COPY assets/9999-image-bpi-r4-sdcard.patch mtk-openwrt-feeds/25.12/patches-base/
+COPY assets/9999-wifi-mt76-mt7996-fix-FT-SAE-by-adding-BIP-batch-key-handling.patch mtk-openwrt-feeds/autobuild/unified/filogic/mac80211/25.12/files/package/kernel/mt76/patches/
 COPY assets/100-wifi-mt76-mt7996-Use-tx_power-from-default-fw-if-EEP.patch mtk-openwrt-feeds/autobuild/unified/filogic/mac80211/25.12/files/package/kernel/mt76/patches/
 
 # My patch tree on mtk SDK
@@ -81,6 +82,7 @@ COPY assets/9999-netfilter-add-ttl-import.patch mtk-openwrt-feeds/autobuild/unif
 COPY assets/99999-enable_8g_images_on_prepared_mtk_pr21437.patch mtk-openwrt-feeds/25.12/patches-base/
 # Uncomment if assets/feed_revision was used above
 #COPY assets/9999-remove-rust-llvm-dl.patch mtk-openwrt-feeds/25.12/patches-feeds/
+COPY assets/usteer_Makefile /home/build/openwrt/package/network/services/usteer/Makefile
 
 WORKDIR /home/build/openwrt
 
@@ -91,6 +93,7 @@ COPY assets/config .config
 USER root
 RUN chown -R build:build \
 	.config \
+	package \
 	../assets \
 	../mtk-openwrt-feeds/25.12/patches-base/ \
 	../mtk-openwrt-feeds/25.12/patches-feeds/ \
