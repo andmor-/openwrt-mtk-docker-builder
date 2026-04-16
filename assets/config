@@ -126,7 +126,8 @@ CONFIG_TARGET_mediatek_filogic_DEVICE_bananapi_bpi-r4=y
 # CONFIG_TARGET_mediatek_filogic_DEVICE_glinet_gl-xe3000 is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_h3c_magic-nx30-pro is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_huasifei_wh3000 is not set
-# CONFIG_TARGET_mediatek_filogic_DEVICE_huasifei_wh3000-pro is not set
+# CONFIG_TARGET_mediatek_filogic_DEVICE_huasifei_wh3000-pro-emmc is not set
+# CONFIG_TARGET_mediatek_filogic_DEVICE_huasifei_wh3000-pro-nand is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_imou_hx21 is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_iptime_ax3000q is not set
 # CONFIG_TARGET_mediatek_filogic_DEVICE_iptime_ax3000se is not set
@@ -2082,7 +2083,9 @@ CONFIG_BUSYBOX_CONFIG_AWK=y
 CONFIG_BUSYBOX_CONFIG_FEATURE_AWK_LIBM=y
 CONFIG_BUSYBOX_CONFIG_FEATURE_AWK_GNU_EXTENSIONS=y
 CONFIG_BUSYBOX_CONFIG_CMP=y
-# CONFIG_BUSYBOX_CONFIG_DIFF is not set
+CONFIG_BUSYBOX_CONFIG_DIFF=y
+CONFIG_BUSYBOX_CONFIG_FEATURE_DIFF_LONG_OPTIONS=y
+CONFIG_BUSYBOX_CONFIG_FEATURE_DIFF_DIR=y
 # CONFIG_BUSYBOX_CONFIG_ED is not set
 # CONFIG_BUSYBOX_CONFIG_PATCH is not set
 CONFIG_BUSYBOX_CONFIG_SED=y
