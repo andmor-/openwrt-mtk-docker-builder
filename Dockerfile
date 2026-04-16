@@ -46,11 +46,11 @@ USER build
 
 WORKDIR /home/build/
 
-# Last verified working: 1f535037b19731cd37512ed00b648a35b40ad13c - qualcommax: ipq807x: mx5300: use existing aliases node
-ENV OPENWRT_VER=1f535037b19731cd37512ed00b648a35b40ad13c
+# Last verified working: 12e56ac8d4bc056768c962796f55531a6da2b4cf - mvebu: fix kmod for switch on clearfog base/pro
+ENV OPENWRT_VER=12e56ac8d4bc056768c962796f55531a6da2b4cf
 ENV OPENWRT_BRANCH=openwrt-25.12
-# Last verified working: 79b79ece6267ea64db5dab853d4576d9b9c11889 - [kernel][common][eth][Refactor the check condition from PSE_FC to GDM_RXFC in the QDMA Tx hang monitor]
-ENV MTK_FEEDS_VER=79b79ece6267ea64db5dab853d4576d9b9c11889
+# Last verified working: 14dc256bd536382ea427712eb3896e669beeae71 - [kernel-6.12][common][hnat][Add bridge forward 3-tuple HNAT offload support]
+ENV MTK_FEEDS_VER=14dc256bd536382ea427712eb3896e669beeae71
 ENV MTK_FEEDS_BRANCH=master
 
 RUN git clone --branch ${OPENWRT_BRANCH} https://github.com/openwrt/openwrt.git openwrt && \
@@ -74,10 +74,10 @@ COPY --chown=build:build assets/ ./assets
 # Community patches
 COPY --chown=build:build assets/999-sfp-10-additional-quirks.patch mtk-openwrt-feeds/25.12/files/target/linux/mediatek/patches-6.12/
 COPY --chown=build:build assets/9999-image-bpi-r4-sdcard.patch mtk-openwrt-feeds/25.12/patches-base/
-COPY --chown=build:build assets/9999-wifi-mt76-mt7996-fix-FT-SAE-by-adding-BIP-batch-key-handling.patch mtk-openwrt-feeds/autobuild/unified/filogic/mac80211/25.12/files/package/kernel/mt76/patches/
 COPY --chown=build:build assets/100-wifi-mt76-mt7996-Use-tx_power-from-default-fw-if-EEP.patch mtk-openwrt-feeds/autobuild/unified/filogic/mac80211/25.12/files/package/kernel/mt76/patches/
 
 # My patch tree on mtk SDK
+COPY --chown=build:build assets/9999-wifi-mt76-mt7996-fix-FT-SAE-by-adding-BIP-batch-key-handling.patch mtk-openwrt-feeds/autobuild/unified/filogic/mac80211/25.12/files/package/kernel/mt76/patches/
 COPY --chown=build:build assets/9999-netfilter-add-ttl-import.patch mtk-openwrt-feeds/autobuild/unified/filogic/mac80211/25.12/files/target/linux/mediatek/patches-6.12/
 COPY --chown=build:build assets/99999-enable_8g_images_on_prepared_mtk_pr21437.patch mtk-openwrt-feeds/25.12/patches-base/
 COPY --chown=build:build assets/usteer_Makefile /home/build/openwrt/package/network/services/usteer/Makefile
