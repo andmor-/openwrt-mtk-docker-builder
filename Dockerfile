@@ -46,11 +46,11 @@ USER build
 
 WORKDIR /home/build/
 
-# Last verified working: 12e56ac8d4bc056768c962796f55531a6da2b4cf - mvebu: fix kmod for switch on clearfog base/pro
-ENV OPENWRT_VER=12e56ac8d4bc056768c962796f55531a6da2b4cf
+# Last verified working: 8190b4edad64f8caaaaa5a80b8e7b5cde38986e1 - OpenWrt v25.12.3: revert to branch defaults
+ENV OPENWRT_VER=8190b4edad64f8caaaaa5a80b8e7b5cde38986e1
 ENV OPENWRT_BRANCH=openwrt-25.12
-# Last verified working: 14dc256bd536382ea427712eb3896e669beeae71 - [kernel-6.12][common][hnat][Add bridge forward 3-tuple HNAT offload support]
-ENV MTK_FEEDS_VER=14dc256bd536382ea427712eb3896e669beeae71
+# Last verified working: c27bb9b821ab2f7e79c6a0e0b8a024937f3035f7 - [MAC80211][kernel-6.12][wed][Add wed support interrupt trigger mode]
+ENV MTK_FEEDS_VER=c27bb9b821ab2f7e79c6a0e0b8a024937f3035f7
 ENV MTK_FEEDS_BRANCH=master
 
 RUN git clone --branch ${OPENWRT_BRANCH} https://github.com/openwrt/openwrt.git openwrt && \
