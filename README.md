@@ -57,3 +57,4 @@ The final images will be located at:
 - https://www.openwrt.pro/post-640.html
 - https://openwrt.org/inbox/toh/sinovoip/bananapi_bpi-r4
 - https://forum.openwrt.org/t/tutorial-build-customize-and-use-mediatek-open-source-u-boot-and-atf/134897
+- https://github.com/danpawlik/openwrt-builder
