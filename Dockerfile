@@ -47,7 +47,7 @@ USER build
 WORKDIR /home/build/
 
 # Last verified working: 2b06da15897c970bd426bc95a512e550313a2ea1 - OpenWrt v25.12.4: revert to branch defaults
-ENV OPENWRT_VER=2b06da15897c970bd426bc95a512e550313a2ea1
+ENV OPENWRT_VER=v25.12.4
 ENV OPENWRT_BRANCH=openwrt-25.12
 # Last verified working: 9372bc8b1266463da068e5e9a59136d91fd004fb - [openwrt-25][common][bsp][Add the extra_firmware variable to facilitate appending built-in firmware names in other rules scripts]
 ENV MTK_FEEDS_VER=9372bc8b1266463da068e5e9a59136d91fd004fb
