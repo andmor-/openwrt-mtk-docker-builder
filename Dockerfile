@@ -38,7 +38,7 @@ RUN apt-get update && \
 
 # Docker exposes the total number of cores of the host in nproc -> set a reasonable nproc number for autobuild
 RUN echo '#!/bin/sh' > /usr/local/bin/nproc && \
-	echo 'echo 5' >> /usr/local/bin/nproc && \
+	echo 'echo 10' >> /usr/local/bin/nproc && \
 	chmod +x /usr/local/bin/nproc
 
 RUN useradd -m build
@@ -46,11 +46,11 @@ USER build
 
 WORKDIR /home/build/
 
-# Last verified working: 2b06da15897c970bd426bc95a512e550313a2ea1 - OpenWrt v25.12.4: revert to branch defaults
-ENV OPENWRT_VER=v25.12.4
+# Last verified working: 8dff4c9a340371b1e1f10b03ac06340d15f60e86 - airoha: backport net upstream fixes
+ENV OPENWRT_VER=8dff4c9a340371b1e1f10b03ac06340d15f60e86
 ENV OPENWRT_BRANCH=openwrt-25.12
-# Last verified working: 9372bc8b1266463da068e5e9a59136d91fd004fb - [openwrt-25][common][bsp][Add the extra_firmware variable to facilitate appending built-in firmware names in other rules scripts]
-ENV MTK_FEEDS_VER=9372bc8b1266463da068e5e9a59136d91fd004fb
+# Last verified working: 7569188ea6e3823ebc8d9fcb87a4bbd5c70cf9e9 - [openwrt-24][common][app][fix backport patches for dnsmasq v2.92.2]
+ENV MTK_FEEDS_VER=7569188ea6e3823ebc8d9fcb87a4bbd5c70cf9e9
 ENV MTK_FEEDS_BRANCH=master
 
 RUN git clone --branch ${OPENWRT_BRANCH} https://github.com/openwrt/openwrt.git openwrt && \
