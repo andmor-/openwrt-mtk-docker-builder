@@ -47,7 +47,7 @@ The final images will be located at:
 - OpenWrt and MTK feed revisions are pinned.
 - All modifications are applied via patches.
 - The resulting images boot cleanly on the Banana Pi R4 (8GB RAM model) for all: eMMC, SNAND and SDcard. ~~**There is currently an issue when booting from NAND where the boot procedure hangs after loading the kernel with: "Waiting for root device: /dev/fit0"**. To fix this you can install only the sysupgrade squashfs part from openwrt online snapshots.~~ Fixed with [865229fa](https://git.openwrt.org/openwrt/openwrt/commit/?h=openwrt-25.12&id=865229fad90af85989bbcdd294424a6f2d2723b3)
-- This Docker image is developed and tested on macos M1, so it pulls Debian for ARM. Packages installed with `apt` may differ between ARM and x86 hosts.
+- This Docker image is developed and tested on macos M5, so it pulls Debian for ARM. Packages installed with `apt` may differ between ARM and x86 hosts.
 - This repository is not intended to upstream or distribute any code or images; it provides a practical build environment to generate working images in multiple host architectures, without dealing with MTK SDK quirks.
 
 ## References

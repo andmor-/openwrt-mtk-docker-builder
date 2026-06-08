@@ -49,8 +49,8 @@ WORKDIR /home/build/
 # Last verified working: 78c88ce188b3266757391c34948dffd805e91f78 - image: fix per device targz rootfs wrong suffix and redundant images
 ENV OPENWRT_VER=78c88ce188b3266757391c34948dffd805e91f78
 ENV OPENWRT_BRANCH=openwrt-25.12
-# Last verified working: 43719a5b4a53a1247e41508dbd6902e20ebf4c2c - [openwrt-25][common][bsp][Unified autobuild: fix download.sh flow]
-ENV MTK_FEEDS_VER=43719a5b4a53a1247e41508dbd6902e20ebf4c2c
+# Last verified working: 0865c34936480df69ab766c52493ecdd0418fe3d - [openwrt-25][mt7986][eth][Fix 02_network patch failure on Filogic]
+ENV MTK_FEEDS_VER=0865c34936480df69ab766c52493ecdd0418fe3d
 ENV MTK_FEEDS_BRANCH=master
 
 RUN git clone --branch ${OPENWRT_BRANCH} https://github.com/openwrt/openwrt.git openwrt && \
