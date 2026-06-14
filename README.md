@@ -4,6 +4,7 @@ Debian based Docker image for building the MediaTek OpenWrt SDK against OpenWrt 
 
 > [!WARNING]
 > **Why you should build your own images:** Trust No One (Not Even This Repo)
+>
 > Routers are high-value targets, from a security perspective, you should **never blindly install firmware images or packages from unverified sources on your router**. This applies to "Release" binaries found in *any* GitHub repository—including this one. There are no guarantees that a downloaded artifact exactly matches the open-source code, and even when generated via GitHub Actions, ruling out CI supply chain attacks is incredibly difficult. (Even official OpenWrt repositories have faced supply chain risks in the past, though they are generally considered safe). 
 > 
 > **To protect your privacy and ensure your router doesn't end up in a botnet**, either use the **official OpenWrt mainline images** or **build your own** using tools like this repository.
