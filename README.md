@@ -2,6 +2,12 @@
 
 Debian based Docker image for building the MediaTek OpenWrt SDK against OpenWrt 25.12, with full support for the Banana Pi R4, including the 8GB RAM variant.
 
+> [!WARNING]
+> **Why you should build your own images:** Trust No One (Not Even This Repo)
+> Routers are high-value targets, from a security perspective, you should **never blindly install firmware images or packages from unverified sources on your router**. This applies to "Release" binaries found in *any* GitHub repository—including this one. There are no guarantees that a downloaded artifact exactly matches the open-source code, and even when generated via GitHub Actions, ruling out CI supply chain attacks is incredibly difficult. (Even official OpenWrt repositories have faced supply chain risks in the past, though they are generally considered safe). 
+> 
+> **To protect your privacy and ensure your router doesn't end up in a botnet**, either use the **official OpenWrt mainline images** or **build your own** using tools like this repository.
+
 The image backports OpenWrt PR [#21437](https://github.com/openwrt/openwrt/pull/21437) by @frank-w (8GB DRAM support) into the OpenWrt 25.12 branch pre‑prepared with `autobuild.sh prepare`. The Dockerfile itself and the remaining patches, are based on the build scripts maintained by [@woziwrt](https://github.com/woziwrt/bpi-r4-6.12) and [@chenglong-do](https://github.com/chenglong-do/bpi-r4-openwrt-25.12-mtk)
 
 All that is done here is to mix these and write it into a docker image for multi-platform usage, reproducibility and clean state management.
