@@ -46,11 +46,11 @@ USER build
 
 WORKDIR /home/build/
 
-# Last verified working: 78c88ce188b3266757391c34948dffd805e91f78 - image: fix per device targz rootfs wrong suffix and redundant images
-ENV OPENWRT_VER=78c88ce188b3266757391c34948dffd805e91f78
+# Last verified working: bbce1cedcc52d60b1d41ece746bc6bf77b64b7f4 - scripts: dhcp/dhcpv6: handling of invalid client ID values
+ENV OPENWRT_VER=bbce1cedcc52d60b1d41ece746bc6bf77b64b7f4
 ENV OPENWRT_BRANCH=openwrt-25.12
-# Last verified working: 0865c34936480df69ab766c52493ecdd0418fe3d - [openwrt-25][mt7986][eth][Fix 02_network patch failure on Filogic]
-ENV MTK_FEEDS_VER=0865c34936480df69ab766c52493ecdd0418fe3d
+# Last verified working: 2812cb84f04910f404bfa5b063be11db2f03e3d2 - [HIGH][openwrt-25][MAC80211][WiFi7][mt76: mt7996: Refactor WMM PBC to be per-band control]
+ENV MTK_FEEDS_VER=2812cb84f04910f404bfa5b063be11db2f03e3d2
 ENV MTK_FEEDS_BRANCH=master
 
 RUN git clone --branch ${OPENWRT_BRANCH} https://github.com/openwrt/openwrt.git openwrt && \
