@@ -46,18 +46,18 @@ USER build
 
 WORKDIR /home/build/
 
-# Last verified working: bbce1cedcc52d60b1d41ece746bc6bf77b64b7f4 - scripts: dhcp/dhcpv6: handling of invalid client ID values
-ENV OPENWRT_VER=bbce1cedcc52d60b1d41ece746bc6bf77b64b7f4
+# Last verified working: 8e7ae1b936eedb086a898a00489b49a9f72bb403 - build: set max-page-size linker flag to match target page size
+ENV OPENWRT_VER=8e7ae1b936eedb086a898a00489b49a9f72bb403
 ENV OPENWRT_BRANCH=openwrt-25.12
-# Last verified working: 2812cb84f04910f404bfa5b063be11db2f03e3d2 - [HIGH][openwrt-25][MAC80211][WiFi7][mt76: mt7996: Refactor WMM PBC to be per-band control]
-ENV MTK_FEEDS_VER=2812cb84f04910f404bfa5b063be11db2f03e3d2
-ENV MTK_FEEDS_BRANCH=master
+# Last verified working: 330d3d1e2646e6baebb6c2a78a80877fe9448a06 - [openwrt-24][common][app][remove dnsmasq backport patch]
+ENV MTK_FEEDS_VER=330d3d1e2646e6baebb6c2a78a80877fe9448a06
+ENV MTK_FEEDS_BRANCH=main
 
 RUN git clone --branch ${OPENWRT_BRANCH} https://github.com/openwrt/openwrt.git openwrt && \
 	cd openwrt && \
 	git checkout ${OPENWRT_VER}
 
-RUN git clone --branch ${MTK_FEEDS_BRANCH} https://git01.mediatek.com/openwrt/feeds/mtk-openwrt-feeds && \
+RUN git clone --branch ${MTK_FEEDS_BRANCH} https://github.com/mediatek/mtk-openwrt-feeds.git && \
 	cd mtk-openwrt-feeds && \
 	git checkout ${MTK_FEEDS_VER}
 
