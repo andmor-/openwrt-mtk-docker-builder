@@ -46,11 +46,11 @@ USER build
 
 WORKDIR /home/build/
 
-# Last verified working: 8e7ae1b936eedb086a898a00489b49a9f72bb403 - build: set max-page-size linker flag to match target page size
-ENV OPENWRT_VER=8e7ae1b936eedb086a898a00489b49a9f72bb403
+# Last verified working: 6dead2869209f4ff9825f3169c129c5ef04f6273 - dropbear: Add additional fixes from 2026.91
+ENV OPENWRT_VER=6dead2869209f4ff9825f3169c129c5ef04f6273
 ENV OPENWRT_BRANCH=openwrt-25.12
-# Last verified working: 330d3d1e2646e6baebb6c2a78a80877fe9448a06 - [openwrt-24][common][app][remove dnsmasq backport patch]
-ENV MTK_FEEDS_VER=330d3d1e2646e6baebb6c2a78a80877fe9448a06
+# Last verified working: 22e12c8e94be3d36dbd6e5f7fe2bbafa147695b6 - [MAC80211][kernel-6.12][wed][Refactor wed hw attach flow]
+ENV MTK_FEEDS_VER=22e12c8e94be3d36dbd6e5f7fe2bbafa147695b6
 ENV MTK_FEEDS_BRANCH=main
 
 RUN git clone --branch ${OPENWRT_BRANCH} https://github.com/openwrt/openwrt.git openwrt && \
