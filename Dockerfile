@@ -46,11 +46,11 @@ USER build
 
 WORKDIR /home/build/
 
-# Last verified working: 6dead2869209f4ff9825f3169c129c5ef04f6273 - dropbear: Add additional fixes from 2026.91
-ENV OPENWRT_VER=6dead2869209f4ff9825f3169c129c5ef04f6273
+# Last verified working: 64900e756efa667774214f9c6b17c113222e01f7 - OpenWrt v25.12.6: adjust config defaults
+ENV OPENWRT_VER=64900e756efa667774214f9c6b17c113222e01f7
 ENV OPENWRT_BRANCH=openwrt-25.12
-# Last verified working: 22e12c8e94be3d36dbd6e5f7fe2bbafa147695b6 - [MAC80211][kernel-6.12][wed][Refactor wed hw attach flow]
-ENV MTK_FEEDS_VER=22e12c8e94be3d36dbd6e5f7fe2bbafa147695b6
+# Last verified working: 6a0596864b7c4a1ce192881d49b6a313dd32572e - [[CICD][git2git01]autobuild: Add nobuild_tarball to pseudo argument list]
+ENV MTK_FEEDS_VER=6a0596864b7c4a1ce192881d49b6a313dd32572e
 ENV MTK_FEEDS_BRANCH=main
 
 RUN git clone --branch ${OPENWRT_BRANCH} https://github.com/openwrt/openwrt.git openwrt && \
@@ -72,21 +72,47 @@ COPY --chown=build:build assets/ ./assets
 #COPY --chown=build:build  assets/feed_revision mtk-openwrt-feeds/autobuild/unified/
 
 # Community patches
+### SFP quirks
 COPY --chown=build:build assets/999-sfp-10-additional-quirks.patch mtk-openwrt-feeds/25.12/files/target/linux/mediatek/patches-6.12/
+### GbE switch LEDs overlay. ref: https://github.com/woziwrt/bpi-r4-deploy/pull/11
+COPY --chown=build:build assets/470-w-add-bpi-r4-leds-overlay.patch mtk-openwrt-feeds/25.12/files/target/linux/mediatek/patches-6.12/
+COPY --chown=build:build assets/471-w-bpi-r4-led-uboot.patch mtk-openwrt-feeds/25.12/files/package/boot/uboot-mediatek/patches/
+### Per-band WiFi LED (MT7996, single-wiphy MLO) + shared tpt trigger. ref: https://lore.kernel.org/linux-wireless/20260714102615.2943-1-petr.wozniak@gmail.com/
+COPY --chown=build:build assets/999-wifi-01-mt7996-per-band-leds.patch mtk-openwrt-feeds/autobuild/unified/filogic/mac80211/25.12/files/package/kernel/mt76/patches/
+COPY --chown=build:build assets/999-wifi-02-mt76-share-tpt-led-trigger.patch mtk-openwrt-feeds/autobuild/unified/filogic/mac80211/25.12/files/package/kernel/mt76/patches/
+
 COPY --chown=build:build assets/9999-image-bpi-r4-sdcard.patch mtk-openwrt-feeds/25.12/patches-base/
+### Fix zeroed tx power. ref: https://github.com/openwrt/mt76/pull/968
 COPY --chown=build:build assets/100-wifi-mt76-mt7996-Use-tx_power-from-default-fw-if-EEP.patch mtk-openwrt-feeds/autobuild/unified/filogic/mac80211/25.12/files/package/kernel/mt76/patches/
 
 # My patch tree on mtk SDK
+### Fix 802.11r FT. ref: https://github.com/openwrt/mt76/pull/1071
 COPY --chown=build:build assets/9999-wifi-mt76-mt7996-fix-FT-SAE-by-adding-BIP-batch-key-handling.patch mtk-openwrt-feeds/autobuild/unified/filogic/mac80211/25.12/files/package/kernel/mt76/patches/
+### Fix missing include
 COPY --chown=build:build assets/9999-netfilter-add-ttl-import.patch mtk-openwrt-feeds/autobuild/unified/filogic/mac80211/25.12/files/target/linux/mediatek/patches-6.12/
+### Add 8GB RAM support
 COPY --chown=build:build assets/99999-enable_8g_images_on_prepared_mtk_pr21437.patch mtk-openwrt-feeds/25.12/patches-base/
+### Add GbE LEDs overlay to filogic DTS. ref: https://github.com/woziwrt/bpi-r4-deploy/pull/11
+COPY --chown=build:build assets/999999-add_leds_overlay_to_mtk_dts.patch mtk-openwrt-feeds/25.12/patches-base/
+
+# Custom makefile for usteer
 COPY --chown=build:build assets/usteer_Makefile /home/build/openwrt/package/network/services/usteer/Makefile
+
 # Uncomment if assets/feed_revision was used above
 #COPY --chown=build:build  assets/9999-remove-rust-llvm-dl.patch mtk-openwrt-feeds/25.12/patches-feeds/
 
 WORKDIR /home/build/openwrt
 
 RUN bash ../mtk-openwrt-feeds/autobuild/unified/autobuild.sh filogic-mac80211-mt798x_rfb-wifi7_nic prepare
+
+# Enable GbE LED trigger. See: https://github.com/woziwrt/bpi-r4-deploy/pull/11
+RUN echo "CONFIG_LED_TRIGGER_PHY=y" >> target/linux/mediatek/filogic/config-6.12 && \
+    mkdir -p files/etc/init.d && \
+    mkdir -p files/etc/uci-defaults
+COPY --chown=build:build assets/files/etc/init.d/mtk-led-fix files/etc/init.d/
+COPY --chown=build:build assets/files/etc/init.d/fancontrol files/etc/init.d/
+COPY --chown=build:build assets/files/etc/uci-defaults/95-mtk-led-fix-enable files/etc/uci-defaults/
+COPY --chown=build:build assets/files/etc/uci-defaults/95-fancontrol-enable files/etc/uci-defaults/
 
 COPY --chown=build:build assets/config .config
 

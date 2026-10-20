@@ -1,0 +1,127 @@
+#!/bin/sh /etc/rc.common
+
+# OpenWrt init requirements
+START=99
+STOP=10
+USE_PROCD=1
+
+# This service can be used to override the default kernel fan control behavior
+# It controls the fan in a continuous linear curve from MIN_TEMP->MIN_PWM to MAX_TEMP->MAX_PWM
+# Kernel support is:
+##   0% -> up to 40C
+##  30% -> from 40C up to 85C
+##  50% -> from 85C up to 115C
+## 100% -> above 115C
+#
+# refs: 
+## - https://git.openwrt.org/openwrt/staging/stintel/tree/target/linux/mediatek/patches-6.12/035-v6.14-arm64-dts-mediatek-mt7988a-bpi-r4-Add-thermal-config.patch?h=b92bab633fe8cf3c3a72345c08d1ab6a8dd0abd2
+## - https://git.openwrt.org/openwrt/staging/stintel/tree/target/linux/mediatek/patches-6.12/180-arm64-dts-mediatek-mt7988a-bpi-r4-Add-fan-and-coolingmaps.patch?h=b92bab633fe8cf3c3a72345c08d1ab6a8dd0abd2
+
+# --- CONFIGURATION ---
+THERMAL_ZONE="/sys/class/thermal/thermal_zone0/temp"
+HWMON_PATH=$(grep -l "" /sys/class/hwmon/hwmon*/pwm1 2>/dev/null | head -n 1 | xargs dirname)
+PWM_FILE="$HWMON_PATH/pwm1"
+
+MIN_TEMP=40000  # 40°C (Fan starts ramping up here)
+MAX_TEMP=75000  # 75°C (Fan hits maximum speed here)
+MIN_PWM=40      # ~15% duty cycle (Minimum baseline speed)
+MAX_PWM=255     # 100% duty cycle (Maximum speed)
+SAFE_PWM=128    # ~50% duty cycle (Fallback/Safe speed)
+
+
+run_fan_logic() {
+    local fail_count=0
+    local current_pwm=0
+    local new_pwm
+    local raw_temp
+    local current_temp
+
+    while true; do
+        raw_temp=$(cat "$THERMAL_ZONE" 2>/dev/null)
+        current_temp=${raw_temp:-0}
+
+        if [ "$current_temp" -eq 0 ]; then
+            fail_count=$((fail_count + 1))
+            if [ "$fail_count" -ge 3 ]; then
+                new_pwm=$MAX_PWM
+            else
+                sleep 10
+                continue
+            fi
+        else
+            fail_count=0
+            if [ "$current_temp" -le "$MIN_TEMP" ]; then
+                # Turn the fan completely off below 40°C
+                new_pwm=0
+            elif [ "$current_temp" -ge "$MAX_TEMP" ]; then
+                # Hit max speed if at or above 75°C
+                new_pwm=$MAX_PWM
+            else
+                # Continuous linear scaling math for temperatures between 40°C and 75°C
+                local temp_range=$((MAX_TEMP - MIN_TEMP))
+                local pwm_range=$((MAX_PWM - MIN_PWM))
+                local temp_diff=$((current_temp - MIN_TEMP))
+            
+                new_pwm=$(( MIN_PWM + (temp_diff * pwm_range / temp_range) ))
+            fi
+
+            # --- NO TACHOMETER SAFETY: STARTUP KICK ---
+            # If the fan was completely stopped (current_pwm=0) and needs to start,
+            # blast it at SAFE_PWM for 1 second so the motor has enough torque to start.
+            if [ "$current_pwm" -eq 0 ] && [ "$new_pwm" -gt 0 ]; then
+                if [ -f "$PWM_FILE" ]; then
+                    echo "$SAFE_PWM" > "$PWM_FILE"
+                    sleep 1
+                fi
+            fi
+        fi
+
+        if [ "$new_pwm" -ne "$current_pwm" ]; then
+            if [ -f "$PWM_FILE" ]; then
+                echo "$new_pwm" > "$PWM_FILE"
+                current_pwm=$new_pwm
+            fi
+        fi
+
+        sleep 10
+    done
+}
+
+start_service() {
+    if [ -z "$HWMON_PATH" ] || [ ! -f "$PWM_FILE" ]; then
+        echo "Error: Could not find a valid PWM device."
+        return 1
+    fi
+
+    procd_open_instance "fancontrol"
+    
+    # Call standard shell execution environment directly to invoke the background function
+    procd_set_param command /bin/sh -c ". $initscript; run_fan_logic"
+    
+    # Automatically restart the script if it crashes or gets killed
+    procd_set_param respawn ${respawn_threshold:-3600} ${respawn_timeout:-5} ${respawn_retry:-5}
+    
+    procd_set_param stdout 1
+    procd_set_param stderr 1
+    procd_close_instance
+}
+
+stop_service() {
+    if [ -f "$PWM_FILE" ]; then
+        echo "$SAFE_PWM" > "$PWM_FILE"
+    fi
+}
+
+status_service() {
+    local cur_temp=$(cat "$THERMAL_ZONE" 2>/dev/null)
+    local cur_pwm=$(cat "$PWM_FILE" 2>/dev/null)
+    
+    if ubus call service list '{"name":"fancontrol"}' 2>/dev/null | grep -q "fancontrol"; then
+        echo "Fan Control is RUNNING (Managed by procd)"
+        echo "----------------------------------------"
+        echo "Temperature: $((cur_temp / 1000))°C ($cur_temp)"
+        echo "PWM Setting: $cur_pwm"
+    else
+        echo "Fan Control is STOPPED"
+    fi
+}
