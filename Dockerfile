@@ -49,8 +49,8 @@ WORKDIR /home/build/
 # Last verified working: 64900e756efa667774214f9c6b17c113222e01f7 - OpenWrt v25.12.6: adjust config defaults
 ENV OPENWRT_VER=64900e756efa667774214f9c6b17c113222e01f7
 ENV OPENWRT_BRANCH=openwrt-25.12
-# Last verified working: 6a0596864b7c4a1ce192881d49b6a313dd32572e - [[CICD][git2git01]autobuild: Add nobuild_tarball to pseudo argument list]
-ENV MTK_FEEDS_VER=6a0596864b7c4a1ce192881d49b6a313dd32572e
+# Last verified working: a50e2e2c4550e5db65709e419e66cac0ee65147b - [kernel-6.12][common][hnat][Add a hash collision packet counter to the hnat_entry debugfs node]
+ENV MTK_FEEDS_VER=a50e2e2c4550e5db65709e419e66cac0ee65147b
 ENV MTK_FEEDS_BRANCH=main
 
 RUN git clone --branch ${OPENWRT_BRANCH} https://github.com/openwrt/openwrt.git openwrt && \
@@ -96,7 +96,7 @@ COPY --chown=build:build assets/99999-enable_8g_images_on_prepared_mtk_pr21437.p
 COPY --chown=build:build assets/999999-add_leds_overlay_to_mtk_dts.patch mtk-openwrt-feeds/25.12/patches-base/
 
 # Custom makefile for usteer
-COPY --chown=build:build assets/usteer_Makefile /home/build/openwrt/package/network/services/usteer/Makefile
+COPY --chown=build:build assets/usteer_Makefile /home/build/openwrt/feeds/packages/net/usteer/Makefile
 
 # Uncomment if assets/feed_revision was used above
 #COPY --chown=build:build  assets/9999-remove-rust-llvm-dl.patch mtk-openwrt-feeds/25.12/patches-feeds/
