@@ -18,24 +18,25 @@ START=10
 #   LED1 (amber)  ON_CTRL 0x26  BLINK_CTRL 0x27
 # ON_CTRL  0x_007 = ENABLE | LINK1000 | LINK100 | LINK10   (on at link)
 # BLINK    0x003f = tx/rx blink on 10/100/1000             (activity)
-# Bit 0x4000 (POLARITY) is needed on phy0/phy1/phy2 (active-low); phy3 is
-# active-high (no POLARITY). Wrong polarity lights the LED with NO link.
+# Bit 0x4000 (POLARITY) is needed on phy0/phy1/phy2/phy3 (active-low);
+# phy2/phy3 polarity depends on boot medium.
+# Wrong polarity lights the LED with NO link.
 # Only the green LED (LED0) is wired on the BPI-R4 - the amber/right LED
 # (LED1) net is NC on this board, so we configure led0 only.
 #
 # --- board-specific tunables (BPI-R4) ----------------------------------
 LED_ON_CTRL=0x24            # MMD 0x1f register: "LED on" control
 LED_BLINK_CTRL=0x25         # MMD 0x1f register: "LED blink" control
-LED_ON_ACTIVE_LOW=0xc007    # on-at-link, POLARITY set  (phy0/phy1; phy2 on eMMC)
-LED_ON_ACTIVE_HIGH=0x8007   # on-at-link, no POLARITY   (phy3; phy2 on SD/NAND)
+LED_ON_ACTIVE_LOW=0xc007    # on-at-link, POLARITY set  (phy0/phy1; phy2 on eMMC; phy3 on NAND)
+LED_ON_ACTIVE_HIGH=0x8007   # on-at-link, no POLARITY   (phy3 SD/eMMC; phy2 on SD/NAND)
 LED_BLINK_TXRX=0x003f       # blink on tx/rx, all speeds
 PORTS_ACTIVE_LOW="0 1"      # WAN, LAN1
-PORTS_ACTIVE_HIGH="3"       # LAN3
-# phy2 (LAN2) LED polarity is BOOT-MEDIUM DEPENDENT (HW-verified on BPI-R4):
-#   SD/NAND boot -> active-high (0x8007) = dark at no-link
-#   eMMC    boot -> active-low  (0xc007) = dark at no-link
-# Same register value gives the OPPOSITE result on eMMC vs SD/NAND, for phy2
-# only (phy0/1/3 are uniform). phy2's group is chosen at runtime in apply_leds.
+# phy2/phy3 (LAN2/LAN3) LED polarities are BOOT-MEDIUM DEPENDENT (HW-verified on BPI-R4):
+#   SD boot -> phy2 and phy3 active-high (0x8007) = dark at no-link
+#   NAND boot -> phy2 active-high (0x8007) / phy3 active-low  (0xc007) = dark at no-link
+#   eMMC boot -> phy2 active-low  (0xc007) / phy3 active-high (0x8007) = dark at no-link
+# Same register value gives the OPPOSITE result on eMMC vs SD and NAND, for phy2/3
+# only (phy0/1 are uniform). phy2/phy3's group is chosen at runtime in apply_leds.
 # -----------------------------------------------------------------------
 
 # Find the mt7530 switch mdio bus dynamically (don't hardcode the name):
@@ -69,16 +70,20 @@ apply_leds() {
 	# Green LED0 = link + activity: on at link, blink on tx/rx.
 	# Per-port polarity is board-specific (confirmed live on the BPI-R4):
 	# phy0/phy1/phy2 are active-low (need POLARITY -> 0xc007), phy3 is
-	# active-high (no POLARITY -> 0x8007). Wrong polarity lights the LED
-	# when there is NO link.
-	# phy2 (LAN2) polarity depends on the boot medium (see tunables note).
+	# active-high (no POLARITY -> 0x8007) depending on boot medium. Wrong
+	# polarity lights the LED when there is NO link.
+	# phy2/phy3 (LAN2/LAN3) polarity depends on the boot medium (see tunables note).
 	# eMMC boot = NOT NAND/ubi AND the eMMC hardware boot partition exists
 	# (SD has no mmcblk0boot0; on NAND boot the cmdline carries ubi.block).
-	local low="$PORTS_ACTIVE_LOW" high="$PORTS_ACTIVE_HIGH"
-	if ! grep -q "ubi.block" /proc/cmdline && [ -e /dev/mmcblk0boot0 ]; then
-		low="$low 2"      # eMMC boot  -> phy2 active-low  (0xc007)
+	local low="$PORTS_ACTIVE_LOW" high=""
+	if grep -q "ubi.block" /proc/cmdline; then
+		low="$low 3" high="2" 				# SNAND boot  -> phy2/phy3 active-low  (0xc007)
 	else
-		high="$high 2"    # SD/NAND boot -> phy2 active-high (0x8007)
+		if [ -e /dev/mmcblk0boot0 ]; then
+			low="$low 2" high="3"     		# eMMC boot  -> phy2 active-low (0xc007); phy3 active-high  (0x8007)
+		else
+			high="2 3"    					# SD boot -> phy2/phy3 active-high (0x8007)
+		fi
 	fi
 
 	local p
