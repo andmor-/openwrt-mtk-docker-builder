@@ -46,11 +46,11 @@ USER build
 
 WORKDIR /home/build/
 
-# Last verified working: 64900e756efa667774214f9c6b17c113222e01f7 - OpenWrt v25.12.6: adjust config defaults
+# Last verified working: 64900e756efa667774214f9c6b17c113222e01f7 - OpenWrt v25.12.6: adjust config defaults (v25.12.6 Tag)
 ENV OPENWRT_VER=64900e756efa667774214f9c6b17c113222e01f7
 ENV OPENWRT_BRANCH=openwrt-25.12
-# Last verified working: a50e2e2c4550e5db65709e419e66cac0ee65147b - [kernel-6.12][common][hnat][Add a hash collision packet counter to the hnat_entry debugfs node]
-ENV MTK_FEEDS_VER=a50e2e2c4550e5db65709e419e66cac0ee65147b
+# Last verified working: c21f3b3617be249a1408a5e9daa66d402dd555bb - [openwrt-24/25][MAC80211][WiFi7][Change IMP release to source code]
+ENV MTK_FEEDS_VER=c21f3b3617be249a1408a5e9daa66d402dd555bb
 ENV MTK_FEEDS_BRANCH=main
 
 RUN git clone --branch ${OPENWRT_BRANCH} https://github.com/openwrt/openwrt.git openwrt && \
