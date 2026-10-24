@@ -69,7 +69,7 @@ apply_leds() {
 
 	# Green LED0 = link + activity: on at link, blink on tx/rx.
 	# Per-port polarity is board-specific (confirmed live on the BPI-R4):
-	# phy0/phy1/phy2 are active-low (need POLARITY -> 0xc007), phy3 is
+	# phy0/phy1 are active-low (need POLARITY -> 0xc007), phy2/phy3 can be
 	# active-high (no POLARITY -> 0x8007) depending on boot medium. Wrong
 	# polarity lights the LED when there is NO link.
 	# phy2/phy3 (LAN2/LAN3) polarity depends on the boot medium (see tunables note).
