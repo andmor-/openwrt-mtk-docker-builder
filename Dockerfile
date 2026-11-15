@@ -46,11 +46,11 @@ USER build
 
 WORKDIR /home/build/
 
-# Last verified working: 64900e756efa667774214f9c6b17c113222e01f7 - OpenWrt v25.12.6: adjust config defaults (v25.12.6 Tag)
-ENV OPENWRT_VER=64900e756efa667774214f9c6b17c113222e01f7
+# Last verified working: 60c494ad065fe3fcaeadf0e9ff4a8a2dc6e6be43 - px5g-mbedtls: reject unsupported -addext values
+ENV OPENWRT_VER=60c494ad065fe3fcaeadf0e9ff4a8a2dc6e6be43
 ENV OPENWRT_BRANCH=openwrt-25.12
-# Last verified working: bd10d128d3142cd4467bf7fc1fc0145c1615f765 - [kernel][mt7988][eth/crypto][Add decrypt CDRT handle in ethernet RX]
-ENV MTK_FEEDS_VER=bd10d128d3142cd4467bf7fc1fc0145c1615f765
+# Last verified working: 2c4d23e3ca74dfd4c20d6d62d524ea8c764a0432 - [openwrt25][MAC80211][WiFi8][Prepare MAC80211 Kernel6.12 autobuild]
+ENV MTK_FEEDS_VER=2c4d23e3ca74dfd4c20d6d62d524ea8c764a0432
 ENV MTK_FEEDS_BRANCH=main
 
 RUN git clone --branch ${OPENWRT_BRANCH} https://github.com/openwrt/openwrt.git openwrt && \
